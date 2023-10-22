@@ -3,11 +3,11 @@
 /// <summary>
 /// to be used for auntie annes mobile ordering
 /// </summary>
-public class AuntieAnnes
+public class AuntieAnnes : MobileOrderDefault
 {
-	public AuntieAnnes : MobileOrderDefault()
-	{
-		var currentLocation = location.AuntieAnnes;
+    public AuntieAnnes()
+    {
+        var currentLocation = location.AuntieAnnes;
 
-	}
+    }
 }

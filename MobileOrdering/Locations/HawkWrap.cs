@@ -1,42 +1,45 @@
 ﻿using System;
-using Systems.Collections.Generic.Dictionary;
 
 /// <summary>
 /// to be used for hawk wrap mobile ordering
 /// </summary>
-public class HawkWrap
+public class HawkWrap : MobileOrderDefault
 {
-	public HawkWrap : MobileOrderDefault()
-	{
-		var currentLocation = location.HawkWrap;
-		string comments; //comments added from the user
-		Enum generalOrders = {Classic, DoubleClassic, Spicy, DoubleSpicy, GrilledChick, BuffChick, ChickCaesar, Vegan }; //options to pick to order
-        Enum sides = { RegFries, HawkFries, HawkSalad }; //side options
-        Enum toppings = { AmericanCheese, Lettuce, Onion, Pickles, ShreddedCheese, Tomato };
-        Enum sauces = { HawkSauce, Buffalo, Ranch, Caesar, BBQ };
-        boolean sauceOnTheSide = false; //if want sauce on the side
-        boolean customize; //like to customize?
+    public HawkWrap()
+    {
+        var currentLocation = location.HawkWrap;
+        string comments = ""; //comments added from the user
+        enum generalOrders { Classic, DoubleClassic, Spicy, DoubleSpicy, GrilledChick, BuffChick, ChickCaesar, Vegan }; //options to pick to order
+        enum sides { RegFries, HawkFries, HawkSalad }; //side options
+        enum toppings { AmericanCheese, Lettuce, Onion, Pickles, ShreddedCheese, Tomato };
+        enum sauces { HawkSauce, Buffalo, Ranch, Caesar, BBQ };
+        bool sauceOnTheSide = false; //if want sauce on the side
+        bool customize; //like to customize?
 
         //mapping all of the prices to their generalOrder
-        Dictionary<generalOrders, float> foodPrices = new Dictionary<generalOrders, float>();
-		foodPrices.Add(Classic, 6.85);
-        foodPrices.Add(DoubleClassic, 8.85);
-        foodPrices.Add(Spicy, 6.85);
-        foodPrices.Add(DoubleSpicy, 8.85);
-        foodPrices.Add(GrilledChick, 6.85);
-        foodPrices.Add(BuffChick, 6.85);
-        foodPrices.Add(ChickCaesar, 6.85);
-        foodPrices.Add(Vegan, 6.85);
+        Dictionary<generalOrders, float> foodPrices = new Dictionary<generalOrders, float>()
+        {
+            { generalOrders.Classic, 6.85f },
+            { generalOrders.DoubleClassic, 8.85f },
+            { generalOrders.Spicy, 6.85f },
+            { generalOrders.DoubleSpicy, 8.85f },
+            { generalOrders.GrilledChick, 6.85f },
+            { generalOrders.BuffChick, 6.85f },
+            { generalOrders.ChickCaesar, 6.85f },
+            { generalOrders.Vegan, 6.85f }
+        };
 
-        Dictionay<sides, float> sidePrices = new Dictionary<sides, float>();
-        sidePrices.Add(RegFries, 2.35);
-        sidePrices.Add(HawkFries, 6.65);
-        sidePrices.Add(HawkSalad, 8.65);
+        Dictionary<sides, float> sidePrices = new Dictionary<sides, float>()
+        {
+            { sides.RegFries, 2.35f },
+            { sides.HawkFries, 6.85f },
+            { sides.HawkSalad, 8.65f }
+        };
 
-		//define customize toppings option
-		//read in order from front end
-		//if customize - read in what they want from frontend
+        //define customize toppings option
+        //read in order from front end
+        //if customize - read in what they want from frontend
         //read in sauce option and if they want it on the side
-		//allow to add comment - read in from front end
-	}
+        //allow to add comment - read in from front end
+    }
 }
