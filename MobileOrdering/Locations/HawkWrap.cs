@@ -3,12 +3,10 @@
 /// <summary>
 /// to be used for hawk wrap mobile ordering
 /// </summary>
-public class HawkWrap : MobileOrderDefault
+namespace teamD.MobileOrdering.Locations
 {
-    public HawkWrap()
+    internal class HawkWrap : MobileOrderDefault
     {
-        var currentLocation = location.HawkWrap;
-        string comments = ""; //comments added from the user
         enum generalOrders { Classic, DoubleClassic, Spicy, DoubleSpicy, GrilledChick, BuffChick, ChickCaesar, Vegan }; //options to pick to order
         enum sides { RegFries, HawkFries, HawkSalad }; //side options
         enum toppings { AmericanCheese, Lettuce, Onion, Pickles, ShreddedCheese, Tomato };

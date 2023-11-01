@@ -1,0 +1,5 @@
+C:\Users\jilli\source\repos\teamD\obj\Debug\net7.0\teamD.csproj.AssemblyReference.cache
+C:\Users\jilli\source\repos\teamD\obj\Debug\net7.0\teamD.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jilli\source\repos\teamD\obj\Debug\net7.0\teamD.AssemblyInfoInputs.cache
+C:\Users\jilli\source\repos\teamD\obj\Debug\net7.0\teamD.AssemblyInfo.cs
+C:\Users\jilli\source\repos\teamD\obj\Debug\net7.0\teamD.csproj.CoreCompileInputs.cache
