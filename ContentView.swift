@@ -6,14 +6,18 @@ struct ContentView: View {
             menuPage()
                 .tabItem() {
                     Text ("Menu")
+                    Image(systemName: "menucard")
                 }
             account()
                 .tabItem() {
                     Text ("Account")
+                    Image(systemName: "person")
                 }
             pastOrders()
                 .tabItem() {
                     Text ("Order History")
+                    Image(systemName: "arrow.clockwise")
+                    
                 }
         }
     
