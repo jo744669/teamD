@@ -44,16 +44,15 @@ Create Table contain (
     foreign key(food_id) references foods(food_id)
 );
 
-Create Table resturants (
-	resturant_id INT PRIMARY KEY,
+Create Table restaurants (
+	restaurant_id INT PRIMARY KEY,
     name VARCHAR(50),
-    description VARCHAR(200)
 );
 
 Create Table serve (
-	resturant_id INT,
+	restaurant_id INT,
     food_id INT,
-    foreign key(resturant_id) references resturants(resturant_id),
+    foreign key(restaurant_id) references restaurants(restaurant_id),
     foreign key(food_id) references foods(food_id)
 );
 
