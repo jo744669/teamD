@@ -1,6 +1,25 @@
 // CartView.swift
 import SwiftUI
 
+struct CartItem: Identifiable {
+    var id = UUID()
+    var name: String
+    var price: Double
+}
+
+class Cart: ObservableObject {
+    @Published var items: [CartItem] = []
+
+    var totalItems: Int {
+        items.count
+    }
+
+    func addItem(item: MenuItem) {
+        let newItem = CartItem(name: item.name, price: item.price)
+        items.append(newItem)
+    }
+}
+
 struct CartView: View {
     @ObservedObject var cart: Cart
 
@@ -12,13 +31,6 @@ struct CartView: View {
                 }
             }
             .navigationTitle("Cart")
-            .overlay(
-                cart.totalItems > 0 ?
-                    Badge(number: cart.totalItems)
-                        .frame(width: 24, height: 24)
-                        .background(Circle().fill(Color.white).offset(x: 10, y: -10))
-                    : nil
-            , alignment: .topTrailing)
         }
     }
 }
