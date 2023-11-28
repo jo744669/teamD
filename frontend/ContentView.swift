@@ -2,6 +2,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    //@EnvironmentObject var cart: Cart
     @StateObject private var cart = Cart()
 
     var body: some View {
@@ -12,7 +13,6 @@ struct ContentView: View {
                     Image(systemName: "menucard")
                 }
                 .onTapGesture {
-                    // Handle focus change if needed
                     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                 }
 
@@ -22,7 +22,6 @@ struct ContentView: View {
                     Image(systemName: "person")
                 }
                 .onTapGesture {
-                    // Handle focus change if needed
                     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                 }
 
@@ -36,7 +35,9 @@ struct ContentView: View {
                 .tabItem {
                     Label("Cart", systemImage: "cart")
                 }
+                
         }
+        .environmentObject(cart)
     }
 }
 
