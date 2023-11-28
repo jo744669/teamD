@@ -12,8 +12,10 @@ struct Badge: View {
 
             Text("\(number)")
                 .foregroundColor(.white)
-                .font(.system(size: 12))
+                .font(.system(size: 20))
+                .offset(x: -18, y: 610)
+                
+                        
         }
     }
 }
-
