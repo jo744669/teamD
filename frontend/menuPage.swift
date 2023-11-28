@@ -1,15 +1,10 @@
+// menuPage.swift
 import SwiftUI
 
-// Model for menu item
-struct MenuItem: Identifiable {
-    var id = UUID()
-    var name: String
-    var price: Double
-    var description: String
-}
-
 struct menuPage: View {
-    @StateObject private var cart = Cart()
+    @EnvironmentObject var cart: Cart
+    
+    //@StateObject private var cart = Cart()
 
     let menuCategories: [String] = ["Auntie Annes", "Burgers and Fries", "Hawk Wrap", "Jamba Juice"]
 
@@ -55,19 +50,12 @@ struct menuPage: View {
                     Text("\(cart.totalItems)")
                         .foregroundColor(.white)
                         .padding(8)
-                        .background(Circle().fill(Color.red).offset(x: 10, y: -10))
+                        .background(Circle().fill(Color.red))
+                        .offset(x: -18, y: 610)
                     : nil,
                 alignment: .topTrailing
             )
         }
     }
 }
-
-#if DEBUG
-struct menuPage_Previews: PreviewProvider {
-    static var previews: some View {
-        menuPage()
-    }
-}
-#endif
 
