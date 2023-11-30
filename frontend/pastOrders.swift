@@ -1,28 +1,45 @@
-//
-//  pastOrders.swift
-//  sjuOrdering
-//
-//  Created by Garrett Goodney on 11/8/23.
-//
-
+// pastOrders.swift
 import SwiftUI
 
+struct PastOrder: Identifiable {
+    var id = UUID()
+    var orderNumber: Int
+    var orderDate: Date
+    var items: [CartItem]
+}
+
 struct pastOrders: View {
+    @ObservedObject var cart: Cart
+
     var body: some View {
         NavigationStack {
-            
             List {
-                Section{
-                    Text("Pretzel - 11/1/13")
-                    Text("Hamburger combo - 11/1/23")
+                ForEach(cart.pastOrders) { pastOrder in
+                    NavigationLink(
+                        destination: PastOrderDetailsView(pastOrder: pastOrder),
+                        label: {
+                            HStack {
+                                Text("Order #\(pastOrder.orderNumber)")
+                                Spacer()
+                                Text("\(formattedDate(pastOrder.orderDate))")
+                            }
+                        }
+                    )
                 }
             }
-            .navigationTitle("Past orders")
+            .navigationTitle("Past Orders")
         }
-        
+    }
+
+    private func formattedDate(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        return dateFormatter.string(from: date)
     }
 }
 
-#Preview {
-    pastOrders()
+struct pastOrders_Previews: PreviewProvider {
+    static var previews: some View {
+        pastOrders(cart: Cart())
+    }
 }
