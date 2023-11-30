@@ -3,6 +3,10 @@ import SwiftUI
 
 struct MainTabView: View {
     @StateObject private var cart = Cart()
+    @State private var userEmail: String = ""
+    init(userEmail: String) {
+           _userEmail = State(initialValue: userEmail)
+       }
 
     var body: some View {
         TabView {
@@ -11,20 +15,14 @@ struct MainTabView: View {
                     Text("Menu")
                     Image(systemName: "menucard")
                 }
-                .onTapGesture {
-                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                }
 
-            Account()
+            Account(userEmail: $userEmail)
                 .tabItem {
                     Text("Account")
                     Image(systemName: "person")
                 }
-                .onTapGesture {
-                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                }
 
-            pastOrders()
+            pastOrders(cart: cart) // Provide the 'cart' instance here
                 .tabItem {
                     Text("Order History")
                     Image(systemName: "arrow.clockwise")
@@ -36,12 +34,17 @@ struct MainTabView: View {
                 }
         }
         .environmentObject(cart)
+        .overlay(
+            Badge(number: cart.totalItems)
+                .offset(x: 165, y: 340)
+                .opacity(cart.totalItems > 0 ? 1.0 : 0.0)
+        )
     }
 }
 
 struct MainTabView_Previews: PreviewProvider {
     static var previews: some View {
-        MainTabView()
+        MainTabView(userEmail: "example@sju.edu")
     }
 }
 
