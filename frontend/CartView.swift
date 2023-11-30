@@ -45,6 +45,11 @@ class Cart: ObservableObject {
         clearCart()
     }
 
+    func deleteItem(at index: Int) {
+        items.remove(at: index)
+        updateBadgeNumber()
+    }
+
     private func updateBadgeNumber() {
         badgeNumber = totalItems
     }
@@ -57,10 +62,14 @@ struct CartView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(cart.items) { item in
-                    Text("\(item.name) - $\(item.price)")
+                ForEach(cart.items.indices, id: \.self) { index in
+                    Text("\(cart.items[index].name) - $\(cart.items[index].price)")
                         .padding()
                 }
+                .onDelete(perform: { indexSet in
+                    guard let first = indexSet.first else { return }
+                    cart.deleteItem(at: first)
+                })
             }
             .listStyle(PlainListStyle())
             .navigationTitle("Cart")
@@ -93,4 +102,6 @@ struct CartView_Previews: PreviewProvider {
     }
 }
 #endif
+
+
 
