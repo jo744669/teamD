@@ -52,7 +52,7 @@ struct LoginView: View {
         }
         .padding()
         .fullScreenCover(isPresented: $isMainTabViewPresented, content: {
-            MainTabView()
+            MainTabView(userEmail: email)
         })
     }
 
