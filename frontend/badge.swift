@@ -1,4 +1,5 @@
 // Badge.swift
+
 import SwiftUI
 
 struct Badge: View {
@@ -12,10 +13,8 @@ struct Badge: View {
 
             Text("\(number)")
                 .foregroundColor(.white)
-                .font(.system(size: 20))
-                .offset(x: -18, y: 610)
-                
-                        
+                .font(.system(size: 13))
+                .offset(x: -2, y: 2)
         }
     }
 }
