@@ -3,33 +3,32 @@ import SwiftUI
 
 struct menuPage: View {
     @EnvironmentObject var cart: Cart
-    
-    //@StateObject private var cart = Cart()
+    var onBadgeUpdate: ((Int) -> Void)? // Closure for updating the badge
 
     let menuCategories: [String] = ["Auntie Annes", "Burgers and Fries", "Hawk Wrap", "Jamba Juice"]
 
     let menuItems: [String: [MenuItem]] = [
-        "Auntie Annes": [
-            MenuItem(name: "Pretzel", price: 3.99, description: "a soft pretzel"),
-            MenuItem(name: "Pretzel dogs", price: 4.99, description: "Pretzel dogs"),
-            // Add more Auntie Annes items as needed
-        ],
-        "Burgers and Fries": [
-            MenuItem(name: "Nashville spicy chicken", price: 8.99, description: "Pretzel dogs"),
-            MenuItem(name: "Grilled chicken and bacon", price: 9.99, description: "Pretzel dogs"),
-            // Add more Burgers and Fries items as needed
-        ],
-        "Hawk Wrap": [
-            MenuItem(name: "Classic", price: 6.99, description: "Pretzel dogs"),
-            MenuItem(name: "Double classic", price: 8.99, description: "Pretzel dogs"),
-            // Add more Hawk Wrap items as needed
-        ],
-        "Jamba Juice": [
-            MenuItem(name: "Bold n cold brew", price: 4.99, description: "Pretzel dogs"),
-            MenuItem(name: "Caribbean passion", price: 5.99, description: "Pretzel dogs"),
-            // Add more Jamba Juice items as needed
+            "Auntie Annes": [
+                MenuItem(name: "Classic Pretzel", price: 3.99, description: "A soft pretzel"),
+                MenuItem(name: "Pretzel Dogs", price: 4.99, description: "Pretzel dogs"),
+                // Add more Auntie Annes items as needed
+            ],
+            "Burgers and Fries": [
+                MenuItem(name: "Nashville Spicy Chicken", price: 8.99, description: "Spicy chicken burger"),
+                MenuItem(name: "Grilled Chicken and Bacon", price: 9.99, description: "Chicken and bacon burger"),
+                // Add more Burgers and Fries items as needed
+            ],
+            "Hawk Wrap": [
+                MenuItem(name: "Classic Wrap", price: 6.99, description: "Classic wrap"),
+                MenuItem(name: "Double Classic Wrap", price: 8.99, description: "Double classic wrap"),
+                // Add more Hawk Wrap items as needed
+            ],
+            "Jamba Juice": [
+                MenuItem(name: "Bold n Cold Brew", price: 4.99, description: "Bold cold brew coffee"),
+                MenuItem(name: "Caribbean Passion", price: 5.99, description: "Fruit smoothie"),
+                // Add more Jamba Juice items as needed
+            ]
         ]
-    ]
 
     var body: some View {
         NavigationView {
@@ -39,23 +38,23 @@ struct menuPage: View {
                         ForEach(menuItems[category] ?? [], id: \.id) { item in
                             NavigationLink(destination: ItemDetails(item: item, cart: cart)) {
                                 Text(item.name)
+                                    .onTapGesture {
+                                        addToCart(item: item)
+                                    }
                             }
                         }
                     }
                 }
             }
             .navigationTitle("The Drop")
-            .overlay(
-                cart.totalItems > 0 ?
-                    Text("\(cart.totalItems)")
-                        .foregroundColor(.white)
-                        .padding(8)
-                        .background(Circle().fill(Color.red))
-                        .offset(x: -18, y: 610)
-                    : nil,
-                alignment: .topTrailing
-            )
         }
     }
+
+    private func addToCart(item: MenuItem) {
+        cart.addItem(item: item)
+        // Update the badge using the provided closure
+        onBadgeUpdate?(cart.totalItems)
+    }
 }
+
 
