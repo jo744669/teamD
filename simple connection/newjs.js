@@ -23,14 +23,14 @@ connection.connect((err) => {
 
 app.use(bodyParser.json());
 
-// /insertdata is after the url (can change)
-app.post('/insertData', (req, res) => {
+//inserting into users table when a new person registers
+app.post('/newUser', (req, res) => {
   // data
-  const { field1, field2, field3 } = req.body;
+  const { email, password } = req.body;
 
  //SQL COMMANDS HERE
-  const sqlQuery = `INSERT INTO testtable (field1, field2, field3) VALUES (?, ?, ?)`;
-  const values = [field1, field2, field3];
+  const sqlQuery = `INSERT INTO users (email, password) VALUES (?, ?)`;
+  const values = [email, password];
 
   connection.query(sqlQuery, values, (err, results) => {
     if (err) {
@@ -41,6 +41,66 @@ app.post('/insertData', (req, res) => {
 
     res.json({success: true, message: 'Data inserted successfully'});
   });
+});
+
+//order all of the food in the cart
+app.post('/order', (req, res) => {
+    // data
+    const { food_name } = req.body;
+
+    //SQL COMMANDS HERE
+    const sqlQuery = `INSERT INTO contain (food_name) VALUES (?)`;
+    const values = [food_name];
+
+    connection.query(sqlQuery, values, (err, results) => {
+        if (err) {
+            console.error('Error: ' + err.message);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.json({ success: true, message: 'Data inserted successfully' });
+    });
+});
+
+//add a new card
+app.post('/addCard', (req, res) => {
+    // data
+    const { card_number, expiration_date, cvv } = req.body;
+
+    //SQL COMMANDS HERE
+    const sqlQuery = `INSERT INTO cards (card_number, expiration_date, cvv) VALUES (?, ?, ?)`;
+    const values = [card_number, expiration_date, cvv];
+
+    connection.query(sqlQuery, values, (err, results) => {
+        if (err) {
+            console.error('Error: ' + err.message);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.json({ success: true, message: 'Data inserted successfully' });
+    });
+});
+
+//delete a card
+app.post('/deleteCard', (req, res) => {
+    // data
+    const { card_number } = req.body;
+
+    //SQL COMMANDS HERE
+    const sqlQuery = `DELETE FROM cards WHERE card_number=(card_number) VALUES (?)`;
+    const values = [card_number];
+
+    connection.query(sqlQuery, values, (err, results) => {
+        if (err) {
+            console.error('Error: ' + err.message);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return;
+        }
+
+        res.json({ success: true, message: 'Data inserted successfully' });
+    });
 });
 
 app.listen(port, () => {
