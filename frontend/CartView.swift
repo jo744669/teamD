@@ -5,6 +5,7 @@ struct CartItem: Identifiable {
     var id = UUID()
     var name: String
     var price: Double
+    var quantity: Int
 }
 
 class Cart: ObservableObject {
@@ -13,12 +14,19 @@ class Cart: ObservableObject {
     @Published var pastOrders: [PastOrder] = []
 
     var totalItems: Int {
-        items.count
+        items.reduce(0) { $0 + $1.quantity }
     }
 
     func addItem(item: MenuItem) {
-        let newItem = CartItem(name: item.name, price: item.price)
-        items.append(newItem)
+        if let existingIndex = items.firstIndex(where: { $0.name == item.name }) {
+            // Item already exists in the cart, update quantity
+            items[existingIndex].quantity += 1
+        } else {
+            // Item is not in the cart, add a new entry
+            let newItem = CartItem(name: item.name, price: item.price, quantity: 1)
+            items.append(newItem)
+        }
+
         updateBadgeNumber()
     }
 
@@ -63,8 +71,15 @@ struct CartView: View {
         NavigationView {
             List {
                 ForEach(cart.items.indices, id: \.self) { index in
-                    Text("\(cart.items[index].name) - $\(cart.items[index].price)")
-                        .padding()
+                    HStack {
+                        Text("\(cart.items[index].name) - $\(cart.items[index].price)")
+                            .padding()
+
+                        Spacer()
+
+                        Text("Quantity: \(cart.items[index].quantity)")
+                            .foregroundColor(.gray)
+                    }
                 }
                 .onDelete(perform: { indexSet in
                     guard let first = indexSet.first else { return }
@@ -102,6 +117,7 @@ struct CartView_Previews: PreviewProvider {
     }
 }
 #endif
+
 
 
 
