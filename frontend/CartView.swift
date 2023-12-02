@@ -72,7 +72,7 @@ struct CartView: View {
             List {
                 ForEach(cart.items.indices, id: \.self) { index in
                     HStack {
-                        Text("\(cart.items[index].name) - $\(cart.items[index].price)")
+                        Text("\(cart.items[index].name) - \(formattedPrice(cart.items[index].price))")
                             .padding()
 
                         Spacer()
@@ -108,6 +108,11 @@ struct CartView: View {
             })
         }
     }
+
+    // Function to format price without extra zeros
+    private func formattedPrice(_ price: Double) -> String {
+        return String(format: "$%.2f", price)
+    }
 }
 
 #if DEBUG
@@ -117,6 +122,9 @@ struct CartView_Previews: PreviewProvider {
     }
 }
 #endif
+
+
+
 
 
 
