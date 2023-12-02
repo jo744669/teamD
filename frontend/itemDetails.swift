@@ -10,7 +10,7 @@ struct ItemDetails: View {
             Text(item.name)
                 .font(.title)
 
-            Text("Price: $\(item.price)")
+            Text("Price: \(String(format: "$%.2f", item.price))")
                 .foregroundColor(.gray)
 
             Button("Add to Cart") {
@@ -28,5 +28,7 @@ struct ItemDetails: View {
         .navigationTitle(item.name)
     }
 }
+
+
 
 
