@@ -5,14 +5,8 @@ Users : holds all users based on their user_id including remaining balances for 
 Will be populated from the front end when a profile is created
 */
 CREATE TABLE users (
-    user_id INT PRIMARY KEY,
-    first_name VARCHAR(100), 
-    last_name VARCHAR(100),
-    email VARCHAR(100),
-    password VARCHAR(100),
-    hawkcash Decimal(10, 2),
-    diningdollars Decimal(10, 2),
-    mealexchange int
+    email VARCHAR(100) PRIMARY KEY,
+    password VARCHAR(100)
 );
 
 /*
@@ -25,34 +19,14 @@ CREATE TABLE foods (
 );
 
 /*
-food_options : 
-*/
-Create Table food_options (
-	food_id INT,
-    option_number int,
-    name VARCHAR(100),
-    foreign key(food_id) references foods(food_id)
-);
-
-/*
-payment_types : holds different payment methods
-*/
-Create Table payment_types (
-	payment_id INT PRIMARY KEY,
-    type VARCHAR(50)
-);
-
-/*
 orders: holds previous orders by user to be sorted by date
 */
 CREATE TABLE orders (
 	order_id INT PRIMARY KEY,
-	user_id INT,
-    payment_id INT,
+	email VARCHAR(100) unique,
     order_date DATE,
-    completed VARCHAR(10),
-    foreign key(user_id) references users(user_id),
-    foreign key(payment_id) references payment_types(payment_id)
+    UNIQUE(order_id),
+    foreign key(email) references users(email)
 );
 
 /*
@@ -70,7 +44,7 @@ resturants : different locations to order from
 */
 Create Table restaurants (
 	restaurant_id INT PRIMARY KEY,
-    name VARCHAR(50),
+    name VARCHAR(50)
 );
 
 /*
@@ -87,11 +61,12 @@ Create Table serve (
 cards : holds any cards user has attached to their account
 */
 Create Table cards (
-	card_number INT PRIMARY KEY,
-    name VARCHAR(50),
+	email VARCHAR(100),
+	card_number INT,
     expiration_date DATE,
     cvv INT,
-    zip_code INT
+    UNIQUE(card_number),
+    foreign key(email) references users(email)
 );
 
 /*
@@ -107,7 +82,7 @@ Create Table hawk_wraps (
     side_dish BOOLEAN,
     drink BOOLEAN,
     sauce BOOLEAN
-)
+);
 
 /*
 jamba_juice : holds all of the data for the jamba juice location
@@ -121,7 +96,7 @@ Create Table jamba_juice (
     bowl BOOLEAN,
     description VARCHAR(300),
     bowl_boost BOOLEAN
-)
+);
 
 /*
 burgers_and_fries : holds all of the data for the burgers and fries location
@@ -135,7 +110,7 @@ Create Table burgers_and_fries (
     main_dish_combo BOOLEAN,
     side_dish BOOLEAN,
     drink BOOLEAN
-)
+);
 
 /*
 the_spread : holds all of the data for the spread location
@@ -148,7 +123,7 @@ Create Table the_spread (
     main_dish BOOLEAN,
     side_dish BOOLEAN,
     drink BOOLEAN
-)
+);
 
 /*
 auntie_annes : holds all of the data for auntie annes location
@@ -161,16 +136,6 @@ Create Table auntie_annes (
     main_dish BOOLEAN,
     sauce BOOLEAN,
     drink BOOLEAN
-)
-
-/*
-have : 
-*/
-Create Table have (
-	user_id INT,
-    card_number INT,
-    foreign key(user_id) references users(user_id),
-    foreign key(card_number) references cards(card_number)
 );
 
 /*POPULATING THE TABLES*/
