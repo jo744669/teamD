@@ -73,7 +73,7 @@ Create Table cards (
 hawk_wraps : holds all of the data for the hawk wraps location
 */
 Create Table hawk_wraps (
-    foreign key(resturand_id) references resturants(resturand_id),
+    foreign key(restaurant_id) references restaurants(restaurant_id),
     food_id INT PRIMARY KEY,
     food_name VARCHAR(100),
     price DECIMAL(10,2),
@@ -88,7 +88,7 @@ Create Table hawk_wraps (
 jamba_juice : holds all of the data for the jamba juice location
 */
 Create Table jamba_juice (
-    foreign key(resturand_id) references resturants(resturand_id),
+    foreign key(restaurant_id) references restaurants(restaurant_id),
     food_id INT PRIMARY KEY,
     food_name VARCHAR(100),
     price DECIMAL(10,2),
@@ -102,7 +102,7 @@ Create Table jamba_juice (
 burgers_and_fries : holds all of the data for the burgers and fries location
 */
 Create Table burgers_and_fries (
-    foreign key(resturand_id) references resturants(resturand_id),
+    foreign key(restaurant_id) references restaurants(restaurant_id),
     food_id INT PRIMARY KEY,
     food_name VARCHAR(100),
     price DECIMAL(10,2),
@@ -116,7 +116,7 @@ Create Table burgers_and_fries (
 the_spread : holds all of the data for the spread location
 */
 Create Table the_spread (
-    foreign key(resturand_id) references resturants(resturand_id),
+    foreign key(restaurant_id) references restaurants(restaurant_id),
     food_id INT PRIMARY KEY,
     food_name VARCHAR(100),
     price DECIMAL(10,2),
@@ -129,7 +129,7 @@ Create Table the_spread (
 auntie_annes : holds all of the data for auntie annes location
 */
 Create Table auntie_annes (
-    foreign key(resturand_id) references resturants(resturand_id),
+    foreign key(restaurant_id) references restaurants(restaurant_id),
     food_id INT PRIMARY KEY,
     food_name VARCHAR(100),
     price DECIMAL(10,2),
@@ -142,140 +142,136 @@ Create Table auntie_annes (
 
 /* Populating the foods table*/
 
-Insert into foods values(101, "prezel", 4.29);
-Insert into foods values(102, "originalPrezelDogs", 4.99);
-Insert into foods values(103, "miniDogs", 6.59);
-Insert into foods values(104, "nuggetsCupOriginal", 5.79);
-Insert into foods values(105, "nuggetsCupCinnamon", 5.89);
-Insert into foods values(106, "nuggetsCupPepperoni", 6.59);
-Insert into foods values(107, "nuggetsBucketOriginal", 26.99);
-Insert into foods values(108, "nuggetsBucketCinnamon", 27.99);
-Insert into foods values(109, "nuggetsBucketPepperoni", 32.99);
-Insert into foods values(110, "caramel", 1.19);
-Insert into foods values(111, "cheese", 1.19);
-Insert into foods values(112, "creamCheese", 1.19);
-Insert into foods values(113, "honeyMustard", 1.19);
-Insert into foods values(114, "hotSalsaCheese", 1.19);
-Insert into foods values(115, "marinara", 1.19);
-Insert into foods values(116, "originalLemonade", 3.99);
-Insert into foods values(117, "lemonadeMixer", 4.39);
+Insert into foods values(1, "Medium Fountain Drink", 2.99);
+Insert into foods values(2, "Large Fountain Drink", 3.29);
 
+Insert into foods values(101, "Prezel", 4.29);
+Insert into foods values(102, "Original Prezel Dogs", 4.99);
+Insert into foods values(103, "Mini Dogs", 6.59);
+Insert into foods values(104, "Nuggets Cup - Original", 5.79);
+Insert into foods values(105, "Nuggets Cup - Cinnamon Sugar", 5.89);
+Insert into foods values(106, "Nuggets Cup - Pepperoni", 6.59);
+Insert into foods values(107, "Nuggets Bucket - Original", 26.99);
+Insert into foods values(108, "Nuggets Bucket - Cinnamon", 27.99);
+Insert into foods values(109, "Nuggets Bucket - Pepperoni", 32.99);
+Insert into foods values(110, "Caramel", 1.19);
+Insert into foods values(111, "Cheese", 1.19);
+Insert into foods values(112, "Cream Cheese", 1.19);
+Insert into foods values(113, "HoneyMustard", 1.19);
+Insert into foods values(114, "Hot Salsa Cheese", 1.19);
+Insert into foods values(115, "Marinara", 1.19);
+insert into foods values(116, "Original Lemonade", 3.99);
+insert into foods values(117, "Lemonade Mixer", 4.39);
 
-Insert into foods values(201, "nashSpicyChick", 5.29);
-Insert into foods values(202, "grillChickAndBacon", 7.09);
-Insert into foods values(203, "crispyFishSandwich", 6.99);
-Insert into foods values(204, "kosherBeefHotDog", 4.29);
-Insert into foods values(205, "burgerAndCheese", 5.99);
-Insert into foods values(206, "burgerBaconCheese", 6.49);
-Insert into foods values(207, "burgerAvacadoPepperJack", 6.49);
-Insert into foods values(208, "doubleBurgerAndCheese", 6.49);
-Insert into foods values(209, "chipotleBlackBeanCheese", 7.09);
-Insert into foods values(210, "cyoSandwich", 5.89);
-Insert into foods values(211, "grilledCheese", 5.99);
-Insert into foods values(212, "beyondAndCheeseBurger", 9.49);
-Insert into foods values(213, "pattyMelt", 6.49);
-Insert into foods values(214, "phillyCheesesteak", 7.29);
-Insert into foods values(215, "chickenTenderSandwich", 5.29);
-Insert into foods values(216, "crispyChickStripsThree", 4.59);
-Insert into foods values(217, "crispyChickStripsFive", 7.29);
+Insert into foods values(201, "Nash Spicy Chicken", 5.29);
+Insert into foods values(202, "Grilled Chicken and Bacon", 7.09);
+Insert into foods values(203, "Crispy Fish Sandwich", 6.99);
+Insert into foods values(204, "Kosher Beef Hot Dog", 4.29);
+Insert into foods values(205, "Burger with Cheese", 5.99);
+Insert into foods values(206, "Burger with Bacon and Cheese", 6.49);
+Insert into foods values(207, "Burger with Avacado and PepperJack", 6.49);
+Insert into foods values(208, "Double Burger with Cheese", 6.49);
+Insert into foods values(209, "Chipotle Black Bean and Cheese", 7.09);
+Insert into foods values(210, "CYO Sandwich", 5.89);
+Insert into foods values(211, "Grilled Cheese", 5.99);
+Insert into foods values(212, "Beyond and Cheese Burger", 9.49);
+Insert into foods values(213, "Patty Melt", 6.49);
+Insert into foods values(214, "Philly Cheesesteak", 7.29);
+Insert into foods values(215, "Chicken Tender Sandwich", 5.29);
+Insert into foods values(216, "Crispy Chicken Strips (3)", 4.59);
+Insert into foods values(217, "Crispy Chicken Strips (5)", 7.29);
 
-Insert into foods values(218, "grillChickAndBaconCombo", 10.19);
-Insert into foods values(219, "tenderSandwichCombo", 8.29);
-Insert into foods values(220, "chipotleBlackBeanAndCheeseCombo", 10.59);
-Insert into foods values(221, "burgerBaconCheeseCombo", 10.09);
-Insert into foods values(222, "burgerAvacadoPepperJackCombo", 10.09);
-Insert into foods values(223, "burgerAndCheeseCombo", 9.29);
-Insert into foods values(224, "chickCheesesteakCombo", 7.29);
-Insert into foods values(225, "doubleBurgerCheeseCombo", 12.09);
-Insert into foods values(226, "cyoSandwichCombo", 8.89);
-Insert into foods values(227, "beyondAndCheeseBurgerCombo", 12.79);
-Insert into foods values(228, "crispyChickStripsThreeCombo", 4.59);
-Insert into foods values(229, "crispyChickStripsFiveCombo", 7.29);
+Insert into foods values(218, "Grilled Chicken And Bacon Combo", 10.19);
+Insert into foods values(219, "Tender Sandwich Combo", 8.29);
+Insert into foods values(220, "Chipotle Black Bean and Cheese Combo", 10.59);
+Insert into foods values(221, "Burger with Bacon and Cheese Combo", 10.09);
+Insert into foods values(222, "Burger with Avacado and Pepper Jack Combo", 10.09);
+Insert into foods values(223, "Burger with Cheese Combo", 9.29);
+Insert into foods values(224, "Chicken Cheesesteak Combo", 7.29);
+Insert into foods values(225, "Double Burger with Cheese Combo", 12.09);
+Insert into foods values(226, "CYO Sandwich Combo", 8.89);
+Insert into foods values(227, "Beyond and Cheese Burger Combo", 12.79);
+Insert into foods values(228, "Crispy Chicken Strips (3) Combo", 4.59);
+Insert into foods values(229, "Crispy Chicken Strips (3) Combo", 7.29);
 
-Insert into foods values(230, "motzarellaSticks", 6.09);
-Insert into foods values(231, "classicFries", 3.19);
-Insert into foods values(232, "sweetPotatoFries", 3.49);
-Insert into foods values(233, "ranchFries", 2.69);
+Insert into foods values(230, "Motzarella Sticks", 6.09);
+Insert into foods values(231, "Classic Fries", 3.19);
+Insert into foods values(232, "Sweet Potato Fries", 3.49);
+Insert into foods values(233, "Ranch Fries", 2.69);
 
 
 Insert into foods values(301, "Classic", 6.85);
-Insert into foods values(302, "DoubleClassic", 8.85);
+Insert into foods values(302, "Double Classic", 8.85);
 Insert into foods values(303, "Spicy", 6.85);
-Insert into foods values(304, "DoubleSpicy", 8.85);
-Insert into foods values(305, "GrilledChick", 6.85);
-Insert into foods values(306, "BuffChick", 6.85);
-Insert into foods values(307, "ChickCaesar", 6.85);
+Insert into foods values(304, "Double Spicy", 8.85);
+Insert into foods values(305, "Grilled Chicken", 6.85);
+Insert into foods values(306, "Buffalo Chicken", 6.85);
+Insert into foods values(307, "Chicken Caesar", 6.85);
 Insert into foods values(308, "Vegan", 6.85);
 
-Insert into foods values(309, "RegFries", 2.35);
-Insert into foods values(310, "HawkFires", 6.85);
-Insert into foods values(311, "HawkSalad", 8.65);
+Insert into foods values(309, "Regular Fries", 2.35);
+Insert into foods values(310, "Hawk Fires", 6.85);
+Insert into foods values(311, "Hawk Salad", 8.65);
 
-Insert into foods values(401, "boldNColdBrew", 7.39);
-Insert into foods values(402, "caribbeanPassion", 7.89);
-Insert into foods values(403, "gotchaMatcha", 7.39);
-Insert into foods values(404, "orangeDreamMachine", 7.89);
-Insert into foods values(405, "razzmatazz", 7.89);
-Insert into foods values(406, "alohaPineapple", 7.89);
-Insert into foods values(407, "orangeBooster", 8.99);
-Insert into foods values(408, "greensNGinger", 8.69);
-Insert into foods values(409, "pbChocolateLove", 7.89);
-Insert into foods values(410, "caribbeanPassion", 7.89);
-Insert into foods values(411, "strawberrySurfRider", 7.89);
-Insert into foods values(412, "matchaGreenTeaBlast", 8.99);
-Insert into foods values(413, "megaMango", 8.69);
-Insert into foods values(414, "pbBananaProteinSoy", 8.99);
-Insert into foods values(415, "acaiSuperAnioxidant", 8.99);
-Insert into foods values(416, "mangoAGoGo", 7.89);
-Insert into foods values(417, "pomegrantateParadise", 8.69);
-Insert into foods values(418, "strawberriesWild", 7.89);
-Insert into foods values(419, "peachPerfection", 8.69);
-Insert into foods values(420, "whiteGummi", 7.89);
-Insert into foods values(421, "vanillaBlueSky", 8.69);
-Insert into foods values(422, "strawberyWhirl", 8.69);
-Insert into foods values(423, "smoothTalkinMango", 8.99);
-Insert into foods values(424, "peanutButterMoo", 8.69);
-Insert into foods values(425, "proteinBerryWorkoutPea", 8.99);
-Insert into foods values(426, "proteinBerryWorkoutWhey", 8.99);
+Insert into foods values(401, "Bold N Cold Brew", 7.39);
+Insert into foods values(402, "Caribbean Passion", 7.89);
+Insert into foods values(403, "Gotcha Matcha", 7.39);
+Insert into foods values(404, "Orange Dream Machine", 7.89);
+Insert into foods values(405, "Razzmatazz", 7.89);
+Insert into foods values(406, "Aloha Pineapple", 7.89);
+Insert into foods values(407, "Orange Booster", 8.99);
+Insert into foods values(408, "Greens N Ginger", 8.69);
+Insert into foods values(409, "PB Chocolate Love", 7.89);
+Insert into foods values(410, "Strawberry Surf Rider", 7.89);
+Insert into foods values(411, "Matcha Green Tea Blast", 8.99);
+Insert into foods values(412, "Mega Mango", 8.69);
+Insert into foods values(413, "Apple N Greens", 8.69);
+Insert into foods values(414, "PB Banana Protein Soy", 8.99);
+Insert into foods values(415, "Acai Super Anioxidant", 8.99);
+Insert into foods values(416, "Mango-A-Go-Go", 7.89);
+Insert into foods values(417, "Pomegrantate Paradise", 8.69);
+Insert into foods values(418, "Strawberries Wild", 7.89);
+Insert into foods values(419, "Peach Perfection", 8.69);
+Insert into foods values(420, "White Gummi", 7.89);
+Insert into foods values(421, "Vanilla Blue Sky", 8.69);
+Insert into foods values(422, "Strawbery Whirl", 8.69);
+Insert into foods values(423, "Smooth Talkin Mango", 8.99);
+Insert into foods values(424, "Peanut Butter Moo", 8.69);
+Insert into foods values(425, "Protein Berry Workout Pea", 8.99);
+Insert into foods values(426, "Protein Berry Workout Whey", 8.99);
 
-Insert into foods values(427, "chuckyStrawberryBowl", 8.99);
-Insert into foods values(428, "acaiPrimoBowl", 8.99);
-Insert into foods values(429, "vanillaBlueSkyBowl", 8.99);
-Insert into foods values(430, "dragonfruitDelightBowl", 8.99);
+Insert into foods values(427, "Chucky Strawberry Bowl", 8.99);
+Insert into foods values(428, "Acai Primo Bowl", 8.99);
+Insert into foods values(429, "Vanilla Blue Sky Bowl", 8.99);
+Insert into foods values(430, "Dragonfruit Delight Bowl", 8.99);
 
 
-Insert into foods values(501, "SixinFourCheese", 5.79);
-Insert into foods values(502, "SixinHamAmerican", 7.49);
-Insert into foods values(503, "SixinTurkeySwiss", 7.49);
-Insert into foods values(504, "SixinTurkeyBaconMultigrain", 8.59);
-Insert into foods values(505, "SixinItalian", 7.99);
-Insert into foods values(506, "TwelveArticholkeRedPepperSub", 16.09);
-Insert into foods values(507, "SixinCapreseCiabatta", 8.59);
-Insert into foods values(508, "TwelveinCapreseCiabatta", 16.09);
-Insert into foods values(509, "SixinRoastBeefCheddar", 7.99);
-Insert into foods values(510, "TwelveBuffChickSub", 16.09);
-Insert into foods values(511, "TwelveHamAmerican", 14.49);
-Insert into foods values(512, "SixTunaSalad", 7.49);
-Insert into foods values(513, "TwelveChickCasearWrap", 16.09);
-Insert into foods values(514, "TwelveFourCheese", 10.79);
-Insert into foods values(515, "TwelveSigItalianSub", 16.79);
-Insert into foods values(516, "TwelveItalian", 14.99);
-Insert into foods values(517, "TwelveTurkeyBaconMultigrain", 16.09);
-Insert into foods values(518, "SixBuffChickSub", 8.59);
-Insert into foods values(519, "TwelveRoastBeefCheddar", 14.99);
-Insert into foods values(520, "TwelveTunaSalad", 14.49);
-Insert into foods values(521, "TwelveTurkeySwiss", 14.49);
-Insert into foods values(522, "SixChickCaesarWrap", 8.59);
-Insert into foods values(523, "SixArtichokeRedPepSub", 8.59);
-Insert into foods values(524, "SixinSigItalianSub", 9.29);
-Insert into foods values(525, "proteinBerryWorkoutPea", 8.99);
-Insert into foods values(526, "proteinBerryWorkoutWhey", 8.99);
-
-/*Populating the payment_types table*/
-Insert into payment_types values(1, "HawkCash");
-Insert into payment_types values(2, "DiningDollars");
-Insert into payment_types values(3, "MealExchange");
-Insert into payment_types values(4, "CreditorDebit");
+Insert into foods values(501, "6in Four Cheese", 5.79);
+Insert into foods values(502, "6in Ham + American", 7.49);
+Insert into foods values(503, "6in Turkey + Swiss", 7.49);
+Insert into foods values(504, "6in Turkey + Bacon on Multigrain", 8.59);
+Insert into foods values(505, "6in Italian", 7.99);
+Insert into foods values(506, "12in Articholke Red Pepper Sub", 16.09);
+Insert into foods values(507, "6in Caprese Ciabatta", 8.59);
+Insert into foods values(508, "12in Caprese Ciabatta", 16.09);
+Insert into foods values(509, "6in Roast Beef + Cheddar", 7.99);
+Insert into foods values(510, "12in Buffalo Chicken Sub", 16.09);
+Insert into foods values(511, "12in Ham + American", 14.49);
+Insert into foods values(512, "6in Tuna Salad", 7.49);
+Insert into foods values(513, "12in Chicken Casear Wrap", 16.09);
+Insert into foods values(514, "12in Four Cheese", 10.79);
+Insert into foods values(515, "12in Signature Italian Sub", 16.79);
+Insert into foods values(516, "12in Italian", 14.99);
+Insert into foods values(517, "12in Turkey + Bacon on Multigrain", 16.09);
+Insert into foods values(518, "6in Buffalo Chicken Sub", 8.59);
+Insert into foods values(519, "12in Roast Beef + Cheddar", 14.99);
+Insert into foods values(520, "12in Tuna Salad", 14.49);
+Insert into foods values(521, "12in Turkey + Swiss", 14.49);
+Insert into foods values(522, "6in Chicken Caesar Wrap", 8.59);
+Insert into foods values(523, "6in Artichoke Red Pepper Sub", 8.59);
+Insert into foods values(524, "6in Signature Italian Sub", 9.29);
+Insert into foods values(525, "Signature Chips", 0);
+Insert into foods values(526, "Crave Worthy Chocalate Chip Cookie", 0);
 
 /* Populating the restaurants table*/
 Insert into restaurants values(100, "AuntieAnnes");
