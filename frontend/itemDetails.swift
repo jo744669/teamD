@@ -4,6 +4,7 @@ import SwiftUI
 struct ItemDetails: View {
     var item: MenuItem
     @ObservedObject var cart: Cart
+    @State private var quantity: Int = 1
 
     var body: some View {
         VStack {
@@ -13,8 +14,15 @@ struct ItemDetails: View {
             Text("Price: \(String(format: "$%.2f", item.price))")
                 .foregroundColor(.gray)
 
-            Button("Add to Cart") {
-                cart.addItem(item: item)
+            Stepper(value: $quantity, in: 1...10) {
+                Text("Quantity: \(quantity)")
+            }
+            .padding()
+
+            Button("Add to Cart (\(String(format: "$%.2f", item.price * Double(quantity))))") {
+                for _ in 1...quantity {
+                    cart.addItem(item: item)
+                }
                 print("Item added to cart: \(item.name)")
                 print("Cart items: \(cart.items)")
             }
@@ -28,7 +36,3 @@ struct ItemDetails: View {
         .navigationTitle(item.name)
     }
 }
-
-
-
-
