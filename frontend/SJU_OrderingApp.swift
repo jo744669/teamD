@@ -5,10 +5,11 @@ import SwiftUI
 struct SJU_Orderingapp: App {
     var body: some Scene {
         WindowGroup {
-            LoginView()
+            LoginView(userLoggedInEmail: .constant(""))
         }
     }
 }
+
 
 
 
