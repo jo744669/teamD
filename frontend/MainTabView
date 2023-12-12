@@ -22,13 +22,13 @@ struct MainTabView: View {
                     Image(systemName: "person")
                 }
 
-            pastOrders(cart: cart) // Provide the 'cart' instance here
-                .tabItem {
-                    Text("Order History")
-                    Image(systemName: "arrow.clockwise")
-                }
+            PastOrdersView(cart: cart) // Use the correct name here
+                            .tabItem {
+                                Text("Order History")
+                                Image(systemName: "arrow.clockwise")
+                            }
 
-            CartView(cart: cart)
+            CartView(cart: cart, userLoggedInEmail: userEmail)
                 .tabItem {
                     Label("Cart", systemImage: "cart")
                 }
