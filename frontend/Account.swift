@@ -87,10 +87,10 @@ struct Account: View {
                 }
 
                 Button("Sign Out") {
-                    isLoggedOut.toggle()
+                    signOutUser()
                 }
                 .fullScreenCover(isPresented: $isLoggedOut, content: {
-                    LoginView()
+                    LoginView(userLoggedInEmail: .constant(""))
                 })
             }
         }
@@ -98,6 +98,35 @@ struct Account: View {
 
     private func deleteCard(at offsets: IndexSet) {
         creditCards.remove(atOffsets: offsets)
+    }
+    private func signOutUser() {
+        guard let url = URL(string: "http://localhost:3000/signout") else {
+            print("Invalid URL")
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error signing out:", error)
+                // Handle error if needed
+            } else if let data = data {
+                // Assuming your server sends a JSON response
+                if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                   let success = json["success"] as? Bool {
+                    if success {
+                        // Sign-out successful, update UI accordingly
+                        isLoggedOut.toggle()
+                    } else {
+                        // Handle sign-out failure
+                        print("Sign-out failed")
+                    }
+                }
+            }
+        }
+        .resume()
     }
 }
 
