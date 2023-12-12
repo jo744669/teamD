@@ -36,8 +36,16 @@ struct PastOrderDetailsView: View {
 
 struct PastOrderDetailsView_Previews: PreviewProvider {
     static var previews: some View {
-        PastOrderDetailsView(pastOrder: PastOrder(orderNumber: 1, orderDate: Date(), items: []))
+        let cart = Cart()
+        // Assuming there's an order in the pastOrders array
+        if let sampleOrder = cart.pastOrders.first {
+            return PastOrderDetailsView(pastOrder: sampleOrder)
+        } else {
+            // If pastOrders is empty, create a sample PastOrder for preview
+            return PastOrderDetailsView(pastOrder: PastOrder( orderNumber: 1, orderDate: Date(), items: [], order_id: Int(Date().timeIntervalSince1970)))
+        }
     }
 }
+
 
 
