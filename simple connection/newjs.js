@@ -103,6 +103,16 @@ app.post('/deleteCard', (req, res) => {
     });
 });
 
+//get a users past orders
+app.get('/getTasks', (req, res) => {
+  const userId = req.query.userId;
+  const getAllTasksQuery = 'SELECT * FROM tasks WHERE userId = ?';
+  
+  db.query(getAllTasksQuery, [userId], (err, results) => {
+      res.json(results);
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server connected`);
 });
