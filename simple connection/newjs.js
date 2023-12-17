@@ -103,13 +103,31 @@ app.post('/deleteCard', (req, res) => {
     });
 });
 
-//get a users past orders
-app.get('/getTasks', (req, res) => {
-  const userId = req.query.userId;
-  const getAllTasksQuery = 'SELECT * FROM tasks WHERE userId = ?';
-  
-  db.query(getAllTasksQuery, [userId], (err, results) => {
-      res.json(results);
+app.post('/getUserOrders', (req, res) => {
+  const userId = req.body.userId;
+
+  const sql = 'SELECT * FROM users WHERE userId = ?';
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      console.error('error on execution', err);
+      res.status(500).json({ error: 'error on execution' });
+    } 
+    else {
+      if (results.length > 0) {
+        const user = results[0];
+        const responseData = { //this is what the JS will respond with
+          orderNumber: user.orderNumber,
+          orderDate: user.orderDate,
+          items: user.items,
+          order_id: user.order_id
+        };
+
+        res.json(responseData);
+      } 
+      else {
+        res.status(404).json({ error: 'user not found' });
+      }
+    }
   });
 });
 
