@@ -46,6 +46,3 @@ struct PastOrderDetailsView_Previews: PreviewProvider {
         }
     }
 }
-
-
-
