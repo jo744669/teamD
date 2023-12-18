@@ -10,6 +10,7 @@ struct CreditCard: Identifiable {
 
 struct Account: View {
     @Binding var userEmail: String
+    @EnvironmentObject private var userEmailManager: UserEmailManager
     @State private var isLoggedIn: Bool = true // For testing, set this to true
 
     // Card information for testing
@@ -25,9 +26,91 @@ struct Account: View {
 
     @State private var isLoggedOut: Bool = false
 
+    private func sendCardToServer() {
+        guard let userEmail = userEmailManager.userEmail else {
+            print("User email is missing")
+            return
+        }
+
+        guard let url = URL(string: "http://localhost:3000/addCard") else {
+            print("Invalid URL")
+            return
+        }
+
+        let cardData = ["email": userEmail, "cardNumber": newCardNumber, "expirationDate": newCardExpiration, "cvv": newCardCVC]
+        let jsonData = try? JSONSerialization.data(withJSONObject: cardData)
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = jsonData
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error sending card data:", error.localizedDescription)
+                // Handle error if needed
+            } else if let data = data {
+                // Assuming your server sends a JSON response
+                if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                   let success = json["success"] as? Bool {
+                    if success {
+                        // Card added successfully
+                        print("Card added successfully")
+                    } else {
+                        // Handle card addition failure
+                        print("Failed to add card")
+                    }
+                }
+            }
+        }
+        .resume()
+    }
+
+    private func sendCardDeletionToServer(cardNumber: String) {
+        guard let userEmail = userEmailManager.userEmail else {
+            print("User email is missing")
+            return
+        }
+
+        guard let url = URL(string: "http://localhost:3000/deleteCard") else {
+            print("Invalid URL")
+            return
+        }
+
+        let cardData = ["email": userEmail, "cardNumber": cardNumber]
+        let jsonData = try? JSONSerialization.data(withJSONObject: cardData)
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = jsonData
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error sending card deletion request:", error.localizedDescription)
+                // Handle error if needed
+            } else if let data = data {
+                // Assuming your server sends a JSON response
+                if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                   let success = json["success"] as? Bool {
+                    if success {
+                        // Card deleted successfully
+                        print("Card deleted successfully")
+                    } else {
+                        // Handle card deletion failure
+                        print("Failed to delete card")
+                    }
+                }
+            }
+        }
+        .resume()
+    }
+
+
     var body: some View {
         VStack {
-            if isLoggedIn {
+            if let loggedInEmail = userEmailManager.userEmail {
+                // User is logged in
                 Text("Welcome \(userEmail)")
                     .font(.title)
                     .fontWeight(.bold)
@@ -68,14 +151,13 @@ struct Account: View {
                             .keyboardType(.numberPad)
 
                         Button("Add Card") {
-                            // Add the new card to the list
                             creditCards.append(CreditCard(
                                 cardNumber: newCardNumber,
                                 cardExpiration: newCardExpiration,
                                 cardCVC: newCardCVC
                             ))
-
-                            // Dismiss the sheet
+                            print("Button tapped!")
+                            sendCardToServer()
                             isAddCardSheetPresented.toggle()
                         }
                         .padding()
@@ -90,15 +172,46 @@ struct Account: View {
                     signOutUser()
                 }
                 .fullScreenCover(isPresented: $isLoggedOut, content: {
-                    LoginView(userLoggedInEmail: .constant(""))
+                    LoginView().environmentObject(userEmailManager)
                 })
+            } else {
+                // User is not logged in, handle accordingly
+                Text("Please log in to view account")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .padding(.bottom, 10)
+
+                // Optionally, provide UI or button for login
             }
         }
     }
 
     private func deleteCard(at offsets: IndexSet) {
+        guard let userEmail = userEmailManager.userEmail else {
+            print("User email is missing")
+            return
+        }
+
+        // Iterate over the indices provided by 'offsets'
+        for index in offsets {
+            // Ensure the index is within the bounds of the 'creditCards' array
+            guard index < creditCards.count else {
+                print("Invalid index")
+                return
+            }
+
+            // Get the card number at the specified index
+            let cardNumber = creditCards[index].cardNumber
+
+            // Call the function to send card deletion request to the server
+            sendCardDeletionToServer( cardNumber: cardNumber)
+        }
+
+        // Remove the selected cards from 'creditCards'
         creditCards.remove(atOffsets: offsets)
     }
+
+
     private func signOutUser() {
         guard let url = URL(string: "http://localhost:3000/signout") else {
             print("Invalid URL")
@@ -130,7 +243,6 @@ struct Account: View {
     }
 }
 
-
 struct CardRow: View {
     let card: CreditCard
 
@@ -145,7 +257,9 @@ struct CardRow: View {
 #if DEBUG
 struct Account_Previews: PreviewProvider {
     static var previews: some View {
-        Account(userEmail: .constant("sample@sju.edu"))
+        Account(userEmail: .constant("sample@sju.edu")).environmentObject(UserEmailManager.shared)
     }
 }
 #endif
+
+
