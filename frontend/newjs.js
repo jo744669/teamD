@@ -218,6 +218,79 @@ app.post('/deleteCard', (req, res) => {
     }
   });
 });
+//--------------------------------------------------------------------------
+// Route to fetch user cards
+app.get('/getUserCards', (req, res) => {
+  const userEmail = req.query.email;
+
+  if (!userEmail) {
+    return res.status(400).json({ error: 'Missing email parameter' });
+  }
+
+  const sqlQuery = 'SELECT * FROM cards WHERE email = ?';
+
+  connection.query(sqlQuery, [userEmail], (err, results) => {
+    if (err) {
+      console.error('Error fetching user cards:', err.message);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+    // Assuming you have a Card model with properties like cardNumber, expirationDate, cvv
+    const userCards = results.map((row) => ({
+      cardNumber: row.card_number,
+      expirationDate: row.expiration_date,
+      cvv: row.cvv,
+    }));
+
+    res.json({ success: true, userCards });
+  });
+});
+//---------------------------------------------------------------------------
+// Endpoint to fetch past orders for a user
+app.get('/getPastOrders', (req, res) => {
+  const userEmail = req.query.email;
+
+  if (!userEmail) {
+    return res.status(400).json({ error: 'Missing email parameter' });
+  }
+
+  const sqlQuery = `
+  SELECT o.order_id, o.order_date, c.food_id, c.quantity, f.name, CAST(f.price AS DECIMAL(10, 2)) AS price
+  FROM orders o
+  JOIN contain c ON o.order_id = c.order_id
+  JOIN foods f ON c.food_id = f.food_id
+  WHERE o.email = ?
+  ORDER BY o.order_date DESC;
+`;
+
+  connection.query(sqlQuery, [userEmail], (err, results) => {
+    if (err) {
+      console.error('Error fetching past orders:', err.message);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+
+    const pastOrders = [];
+
+    // Organize the data into a structured format
+    results.forEach((row) => {
+      const orderIndex = pastOrders.findIndex((order) => order.order_id === row.order_id);
+
+      if (orderIndex === -1) {
+        pastOrders.push({
+          order_id: row.order_id,
+          orderDate: row.order_date,
+          items: [{ food_id: row.food_id, name: row.name, quantity: row.quantity, price: row.price }],
+        });
+      } else {
+        pastOrders[orderIndex].items.push({ food_id: row.food_id, name: row.name, quantity: row.quantity, price: row.price });
+      }
+    });
+
+    res.json({ success: true, pastOrders });
+  });
+});
 
 
 
