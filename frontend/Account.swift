@@ -1,7 +1,7 @@
 // Account.swift
 import SwiftUI
 
-struct CreditCard: Identifiable {
+struct CreditCard: Identifiable, Decodable {
     var id = UUID()
     var cardNumber: String
     var cardExpiration: String
@@ -9,15 +9,10 @@ struct CreditCard: Identifiable {
 }
 
 struct Account: View {
+    @State private var userCreditCards: [CreditCard] = [] // Use this array for user cards
     @Binding var userEmail: String
     @EnvironmentObject private var userEmailManager: UserEmailManager
     @State private var isLoggedIn: Bool = true // For testing, set this to true
-
-    // Card information for testing
-    @State private var creditCards: [CreditCard] = [
-        CreditCard(cardNumber: "1234 5678 9012 3456", cardExpiration: "12/23", cardCVC: "123"),
-        CreditCard(cardNumber: "2345 6789 0123 4567", cardExpiration: "05/22", cardCVC: "456")
-    ]
 
     @State private var isAddCardSheetPresented = false
     @State private var newCardNumber: String = ""
@@ -25,6 +20,65 @@ struct Account: View {
     @State private var newCardCVC: String = ""
 
     @State private var isLoggedOut: Bool = false
+
+    struct UserCardsResponse: Decodable {
+        let success: Bool
+        let userCards: [CreditCard]
+    }
+
+    private func fetchUserCards() {
+        print("Fetching user cards...")
+        guard let userEmail = userEmailManager.userEmail else {
+            print("User email is missing")
+            return
+        }
+
+        guard let url = URL(string: "http://localhost:3000/getUserCards?email=\(userEmail)") else {
+            print("Invalid URL")
+            return
+        }
+
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("Error fetching user cards:", error.localizedDescription)
+                // Handle error if needed
+            } else if let data = data {
+                do {
+                    let decoder = JSONDecoder()
+
+                    print("Raw Data:", String(data: data, encoding: .utf8) ?? "Failed to convert data to string")
+
+                    let json = try JSONSerialization.jsonObject(with: data, options: [])
+                    if let dictionary = json as? [String: Any],
+                       let success = dictionary["success"] as? Bool,
+                       success,
+                       let userCardsArray = dictionary["userCards"] as? [[String: Any]] {
+
+                        let cards = userCardsArray.map { cardDict in
+                            CreditCard(
+                                cardNumber: cardDict["cardNumber"] as? String ?? "",
+                                cardExpiration: cardDict["expirationDate"] as? String ?? "",
+                                cardCVC: "\(cardDict["cvv"] ?? "")" // Ensure cvv is handled properly
+                            )
+                        }
+
+                        print("Fetched user cards:", cards)
+                        DispatchQueue.main.async {
+                            userCreditCards = cards
+                        }
+                    } else {
+                        print("Failed to parse JSON as expected")
+                    }
+                } catch {
+                    print("Error decoding user cards:", error.localizedDescription)
+                    // Handle decoding error if needed
+                }
+            }
+        }
+        .resume()
+    }
+
+
 
     private func sendCardToServer() {
         guard let userEmail = userEmailManager.userEmail else {
@@ -106,7 +160,6 @@ struct Account: View {
         .resume()
     }
 
-
     var body: some View {
         VStack {
             if let loggedInEmail = userEmailManager.userEmail {
@@ -121,7 +174,7 @@ struct Account: View {
                     .padding(.bottom, 10)
 
                 List {
-                    ForEach(creditCards) { card in
+                    ForEach(userCreditCards) { card in
                         CardRow(card: card)
                             .padding()
                     }
@@ -151,7 +204,7 @@ struct Account: View {
                             .keyboardType(.numberPad)
 
                         Button("Add Card") {
-                            creditCards.append(CreditCard(
+                            userCreditCards.append(CreditCard(
                                 cardNumber: newCardNumber,
                                 cardExpiration: newCardExpiration,
                                 cardCVC: newCardCVC
@@ -174,13 +227,17 @@ struct Account: View {
                 .fullScreenCover(isPresented: $isLoggedOut, content: {
                     LoginView().environmentObject(userEmailManager)
                 })
+                .onAppear {
+                        fetchUserCards()
+                }
+                
             } else {
                 // User is not logged in, handle accordingly
                 Text("Please log in to view account")
                     .font(.title)
                     .fontWeight(.bold)
                     .padding(.bottom, 10)
-
+                    
                 // Optionally, provide UI or button for login
             }
         }
@@ -194,23 +251,22 @@ struct Account: View {
 
         // Iterate over the indices provided by 'offsets'
         for index in offsets {
-            // Ensure the index is within the bounds of the 'creditCards' array
-            guard index < creditCards.count else {
+            // Ensure the index is within the bounds of the 'userCreditCards' array
+            guard index < userCreditCards.count else {
                 print("Invalid index")
                 return
             }
 
             // Get the card number at the specified index
-            let cardNumber = creditCards[index].cardNumber
+            let cardNumber = userCreditCards[index].cardNumber
 
             // Call the function to send card deletion request to the server
-            sendCardDeletionToServer( cardNumber: cardNumber)
+            sendCardDeletionToServer(cardNumber: cardNumber)
         }
 
-        // Remove the selected cards from 'creditCards'
-        creditCards.remove(atOffsets: offsets)
+        // Remove the selected cards from 'userCreditCards'
+        userCreditCards.remove(atOffsets: offsets)
     }
-
 
     private func signOutUser() {
         guard let url = URL(string: "http://localhost:3000/signout") else {
@@ -261,5 +317,4 @@ struct Account_Previews: PreviewProvider {
     }
 }
 #endif
-
 
