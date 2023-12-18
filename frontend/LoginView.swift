@@ -1,4 +1,3 @@
-// LoginView.swift
 import SwiftUI
 
 struct LoginView: View {
@@ -7,8 +6,7 @@ struct LoginView: View {
     @State private var loginError: Bool = false
     @State private var isMainTabViewPresented: Bool = false
     @State private var isRegistrationViewPresented: Bool = false
-    @Binding var userLoggedInEmail: String?
-    
+    @StateObject private var userEmailManager = UserEmailManager.shared
 
     var body: some View {
         VStack {
@@ -34,7 +32,7 @@ struct LoginView: View {
                     if success {
                         withAnimation {
                             print("Valid login. Logging in...")
-                            userLoggedInEmail = email
+                            userEmailManager.userEmail = email
                             isMainTabViewPresented = true
                             loginError = false
                         }
@@ -56,7 +54,6 @@ struct LoginView: View {
             )
             .padding(.top, 20)
 
-
             // Add registration button
             Button("Register") {
                 isRegistrationViewPresented.toggle()
@@ -71,7 +68,9 @@ struct LoginView: View {
         .fullScreenCover(isPresented: $isRegistrationViewPresented, content: {
             RegistrationView(isPresented: $isRegistrationViewPresented)
         })
+        .environmentObject(userEmailManager)
     }
+
     private func isValidLogin(completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: "http://localhost:3000/signin") else {
             print("Invalid URL")
@@ -113,37 +112,6 @@ struct LoginView: View {
         }
         .resume()
     }
-
-    
-
-    
-    private func signInUser(email: String, password: String, completion: @escaping (Result<Data, Error>) -> Void) {
-            guard let url = URL(string: "http://localhost:3000/signin") else {
-                print("Invalid URL")
-                return
-            }
-
-            let userData = ["email": email, "password": password]
-            let jsonData = try? JSONSerialization.data(withJSONObject: userData)
-
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.httpBody = jsonData
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-
-                if let data = data {
-                    completion(.success(data))
-                }
-            }
-            .resume()
-        }
-    
 }
 
 struct RegistrationView: View {
@@ -170,17 +138,12 @@ struct RegistrationView: View {
                 .background(Color.gray)
 
             Button("Register") {
-                // Perform registration logic
                 registerUser(email: newUsername, password: newPassword) { result in
                     switch result {
                     case .success(let data):
-                        // Handle success if needed
                         print("Registration success: \(data)")
-
-                        // Dismiss the registration view and navigate back to login
                         isPresented = false
                     case .failure(let error):
-                        // Handle failure if needed
                         print("Registration error: \(error.localizedDescription)")
                     }
                 }
@@ -193,39 +156,42 @@ struct RegistrationView: View {
         }
         .padding()
     }
+
     private func registerUser(email: String, password: String, completion: @escaping (Result<Data, Error>) -> Void) {
-            guard let url = URL(string: "http://localhost:3000/newUser") else {
-                print("Invalid URL")
+        guard let url = URL(string: "http://localhost:3000/newUser") else {
+            print("Invalid URL")
+            return
+        }
+
+        let userData = ["email": email, "password": password]
+        let jsonData = try? JSONSerialization.data(withJSONObject: userData)
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = jsonData
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
                 return
             }
 
-            let userData = ["email": email, "password": password]
-            let jsonData = try? JSONSerialization.data(withJSONObject: userData)
-
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.httpBody = jsonData
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-
-                if let data = data {
-                    completion(.success(data))
-                }
+            if let data = data {
+                completion(.success(data))
             }
-            .resume()
         }
+        .resume()
+    }
 }
+
 
 #if DEBUG
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView(userLoggedInEmail: .constant(""))
+        LoginView()
     }
 }
 #endif
+
 
