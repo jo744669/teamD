@@ -158,6 +158,69 @@ app.post('/placeOrder', (req, res) => {
   });
 });
 //---------------------------------------------------------------------------
+//adding a card 
+app.post('/addCard', (req, res) => {
+  const { email, cardNumber, expirationDate, cvv } = req.body;
+
+  // Validate the input - add more validation as needed
+
+  // SQL command to insert into 'cards' table
+  const sqlQuery = 'INSERT INTO cards (email, card_number, expiration_date, cvv) VALUES (?, ?, ?, ?)';
+  const values = [email, cardNumber, expirationDate, cvv];
+
+  // Create a new connection
+  const connection = mysql.createConnection({
+    host: 'garrettg.ddns.net',
+    user: 'myuser',
+    password: 'mypass1',
+    database: 'mobileorder',
+  });
+
+  connection.connect((err) => {
+    if (err) {
+      console.error('Error connecting to SQL: ' + err.stack);
+      res.status(500).json({ success: false, error: 'Internal Server Error' });
+      return;
+    }
+
+    // Execute the SQL query
+    connection.query(sqlQuery, values, (err, result) => {
+      if (err) {
+        console.error('Error adding card:', err.message);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+      } else {
+        // Close the connection after the query is executed
+        connection.end();
+        res.json({ success: true });
+      }
+    });
+  });
+});
+//--------------------------------------------------------------------------------
+//delete card 
+
+// Assuming you're using Express.js
+app.post('/deleteCard', (req, res) => {
+  const { email, cardNumber } = req.body;
+
+  // Validate the input - add more validation as needed
+
+  // SQL command to delete the card from 'cards' table
+  const sqlQuery = 'DELETE FROM cards WHERE email = ? AND card_number = ?';
+  const values = [email, cardNumber];
+
+  connection.query(sqlQuery, values, (err, result) => {
+    if (err) {
+      console.error('Error deleting card:', err.message);
+      res.status(500).json({ success: false, error: 'Internal Server Error' });
+    } else {
+      res.json({ success: true });
+    }
+  });
+});
+
+
+
 
 app.listen(port, () => {
   console.log(`Server connected. Listening on port ${port}`);
