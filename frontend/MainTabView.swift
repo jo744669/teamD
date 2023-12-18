@@ -52,5 +52,3 @@ struct MainTabView_Previews: PreviewProvider {
             .environmentObject(UserEmailManager.shared)
     }
 }
-
-
