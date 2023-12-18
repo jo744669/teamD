@@ -1,12 +1,14 @@
-// MainTabView.swift
 import SwiftUI
 
 struct MainTabView: View {
+    @EnvironmentObject private var userEmailManager: UserEmailManager
     @StateObject private var cart = Cart()
     @State private var userEmail: String = ""
+    @State private var isLoggedIn: Bool = false
+
     init(userEmail: String) {
-           _userEmail = State(initialValue: userEmail)
-       }
+        _userEmail = State(initialValue: userEmail)
+    }
 
     var body: some View {
         TabView {
@@ -21,17 +23,19 @@ struct MainTabView: View {
                     Text("Account")
                     Image(systemName: "person")
                 }
+                .environmentObject(userEmailManager)
 
-            PastOrdersView(cart: cart) // Use the correct name here
-                            .tabItem {
-                                Text("Order History")
-                                Image(systemName: "arrow.clockwise")
-                            }
+            PastOrdersView(cart: cart)
+                .tabItem {
+                    Text("Order History")
+                    Image(systemName: "arrow.clockwise")
+                }
 
-            CartView(cart: cart, userLoggedInEmail: userEmail)
+            CartView(cart: cart)
                 .tabItem {
                     Label("Cart", systemImage: "cart")
                 }
+                .environmentObject(userEmailManager)
         }
         .environmentObject(cart)
         .overlay(
@@ -45,6 +49,8 @@ struct MainTabView: View {
 struct MainTabView_Previews: PreviewProvider {
     static var previews: some View {
         MainTabView(userEmail: "example@sju.edu")
+            .environmentObject(UserEmailManager.shared)
     }
 }
+
 
